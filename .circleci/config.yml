@@ -20,3 +20,11 @@ workflows:
     jobs:
       - one
       - two
+dependencies:
+    override:
+        - sudo pip install azurecli
+deployment:
+  prod:
+    branch: master
+    commands:
+      - azure app service sync /home/ubuntu/CircleCiTesting app service://phptestcircleciwebapp --delete
