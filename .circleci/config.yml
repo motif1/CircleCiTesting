@@ -20,11 +20,38 @@ workflows:
     jobs:
       - one
       - two
-dependencies:
-    override:
-        - sudo pip install azurecli
-deployment:
-  prod:
-    branch: master
-    commands:
-      - azure app service sync /home/ubuntu/CircleCiTesting app service://phptestcircleciwebapp --delete
+machine:
+  node:
+    version: 6.10.0
+-- becomes --
+version: 2
+jobs:
+  build:
+    working_directory: ~/azure-appservice-static
+    docker:
+      - image: node:6.10.0
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: NPM Test
+          command: npm test
+      # Deploy production
+  - deploy:
+      command: |
+        if [ "${CIRCLE_BRANCH}" == "master" ];
+          then ./scripts/publish.sh production;
+        fi
+
+./scripts/publish.sh
+#!/bin/bash
+git config --global user.email "$kumarrishi396@gmail.com"
+git config --global user.name "$rishiku"
+
+git checkout -b "$1"
+git merge master
+git commit -am "$CIRCLE_BRANCH build#$CIRCLE_BUILD_NUM"
+git push --force --set-upstream origin $1    
+          
