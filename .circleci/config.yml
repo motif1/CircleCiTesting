@@ -20,3 +20,10 @@ workflows:
     jobs:
       - one
       - two
+version: 2
+jobs:
+  deploy-job:
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "6b:38:b0:7f:91:f6:77:b7:70:ab:81:5e:1b:78:b2:29"
